@@ -2,10 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content=<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sales Playbooks · Belén Guarnieri</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -322,10 +318,12 @@
     /* ── ABOUT STRIP ── */
     .about {
       padding: 5rem 3rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
     }
     .about-label {
       font-size: .72rem;
@@ -334,7 +332,7 @@
       text-transform: uppercase;
       color: var(--accent);
       margin-bottom: 1rem;
-      display: flex; align-items: center; gap: .6rem;
+      display: flex; align-items: center; justify-content: center; gap: .6rem;
     }
     .about-label::before { content: ''; display: inline-block; width: 1.5rem; height: 1px; background: var(--accent); }
     .about h2 {
@@ -446,7 +444,7 @@
       .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
       .grid { grid-template-columns: 1fr; }
       .card.featured { grid-column: span 1; }
-      .about { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+      .about { padding: 4rem 1.5rem; }
       .cta-section { padding: 4rem 1.5rem; }
       footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
       .section-divider { padding: 0 1.5rem; }
@@ -571,13 +569,15 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.554v-5.569c0-1.328-.024-3.037-1.85-3.037-1.851 0-2.135 1.445-2.135 2.939v5.667H9.357V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.284zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
       LinkedIn
     </a>
-    <a href="/cdn-cgi/l/email-protection#096b6c656c67276e7c687b67606c7b60496e64686065276a6664" class="btn-primary" style="display:flex;align-items:center;gap:.6rem;background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--white);">
+    <a href="/cdn-cgi/l/email-protection#5d3f38313833733a283c2f3334382f341d3a303c3431733e3230" class="btn-primary" style="display:flex;align-items:center;gap:.6rem;background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--white);">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-      <span class="__cf_email__" data-cfemail="b6d4d3dad3d898d1c3d7c4d8dfd3c4dff6d1dbd7dfda98d5d9db">[email&#160;protected]</span>
+      <span class="__cf_email__" data-cfemail="ec8e89808982c28b998d9e8285899e85ac8b818d8580c28f8381">[email&#160;protected]</span>
     </a>
   </div>
 </section>
 
 <!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Sales<span>.</span>Playbooks<small style="display:block;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;col
 <footer>
   <div class="footer-logo">Sales<span>.</span>Playbooks<small style="display:block;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;col
