@@ -36,4 +36,4 @@ Con 9 años en ventas B2B, armé estos recursos porque me hubiera encantado tene
 
 ---
 
-*Libre para compartir con atribución · Buenos Aires, AR*
+*Libre para compartir con atribución · Buenos Aires, AR · Última actualización: marzo 2026*
