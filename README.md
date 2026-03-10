@@ -10,11 +10,11 @@ Recursos gratuitos de ventas B2B y captación de leads. Playbooks construidos de
 
 ### 1. Prospección en frío: el sistema completo
 El framework para generar reuniones sin depender del azar. 8 capítulos: ICP operativo, datos, mensaje, cadencia multicanal, medición e IA.
-→ [Descargar playbook](https://belenguarnieri.github.io/sales.playbooks/Prospeccion_Frio_Sistema_Completo_BelenGuarnieri.pdf)
+→ [Ver playbook](https://github.com/belenguarnieri/sales.playbooks/blob/main/Prospeccion_Frio_Sistema_Completo_BelenGuarnieri.pdf)
 
 ### 2. Email Outreach Playbook
 La guía completa para escribir emails en frío que llegan al inbox, generan respuestas y convierten en reuniones. Anti-spam, anatomía del email, FOMO real y 5 plantillas listas para usar.
-→ [Descargar playbook](https://belenguarnieri.github.io/sales.playbooks/Email_Outreach_Playbook_BelenGuarnieri.pdf)
+→ [Ver playbook](https://github.com/belenguarnieri/sales.playbooks/blob/main/Email_Outreach_Playbook_BelenGuarnieri.pdf)
 
 ---
 
