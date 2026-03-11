@@ -16,6 +16,10 @@ El framework para generar reuniones sin depender del azar. 8 capítulos: ICP ope
 La guía completa para escribir emails en frío que llegan al inbox, generan respuestas y convierten en reuniones. Anti-spam, anatomía del email, FOMO real y 5 plantillas listas para usar.
 → [Ver playbook](https://belenguarnieri.github.io/sales.playbooks/email-outreach.html)
 
+### 3. Manejo de Objeciones B2B: la guía de campo 2026
+7 objeciones reales con diálogos, traducciones y el framework de 3 movimientos. Adaptado al comprador B2B moderno que ya investigó antes de hablar con vos.
+→ [Ver playbook](https://belenguarnieri.github.io/sales.playbooks/manejo-objeciones.html)
+
 ---
 
 ## Próximamente
