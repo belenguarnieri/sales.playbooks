@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manejo de Objeciones B2B · Belén Guarnieri</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F5F3EF; --surface: #EDEAE4; --ink: #1A1917;
+      --ink-muted: #6B6760; --accent: #C8502A; --accent-lt: #F0D5CB;
+      --border: #D8D4CC; --white: #FDFCFA;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(245,243,239,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-logo small { display: block; font-family: 'DM Sans', sans-serif; font-size: .6rem; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); margin-top: .1rem; }
+    .nav-back { font-size: .78rem; font-weight: 500; letter-spacing: .08em; color: var(--ink-muted); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: color .2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .hero {
+      padding: 8rem 3rem 4rem;
+      background: var(--ink); color: var(--white);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(200,80,42,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 760px; position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-size: .7rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent-lt); margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: .6rem;
+      opacity: 0; animation: fadeUp .6s .1s forwards;
+    }
+    .hero-eyebrow::before { content: ''; display: inline-block; width: 1.5rem; height: 1px; background: var(--accent-lt); }
+    .hero h1 {
+      font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 600; line-height: 1.15; margin-bottom: 1.4rem;
+      opacity: 0; animation: fadeUp .6s .2s forwards;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent-lt); }
+    .hero-sub {
+      font-size: 1rem; line-height: 1.75; color: rgba(255,255,255,.6);
+      max-width: 560px; margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp .6s .3s forwards;
+    }
+    .hero-meta {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .6s .4s forwards;
+    }
+    .meta-item { font-size: .78rem; color: rgba(255,255,255,.4); letter-spacing: .06em; }
+    .meta-item strong { display: block; color: rgba(255,255,255,.75); font-weight: 500; margin-bottom: .2rem; font-size: .85rem; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(16px); } }
+
+    /* INTRO QUOTE */
+    .intro-quote {
+      background: var(--white); border-left: 4px solid var(--accent);
+      padding: 2rem 2.5rem; margin: 4rem 0 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; line-height: 1.6; color: var(--ink);
+      font-style: italic;
+    }
+    .intro-quote cite { display: block; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: .78rem; color: var(--ink-muted); letter-spacing: .08em; text-transform: uppercase; margin-top: 1rem; }
+
+    .content { max-width: 760px; margin: 0 auto; padding: 4rem 3rem 6rem; }
+
+    .chapter { margin-bottom: 3.5rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border); }
+    .chapter:last-of-type { border-bottom: none; }
+    .chapter-num {
+      font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .8rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .chapter-num::before { content: ''; display: inline-block; width: 1.2rem; height: 1px; background: var(--accent); }
+    .chapter h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; line-height: 1.25; margin-bottom: 1.2rem; }
+    .chapter h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; margin: 1.8rem 0 .7rem; color: var(--ink); }
+    .chapter p { font-size: .95rem; line-height: 1.8; color: var(--ink-muted); margin-bottom: 1rem; }
+    .chapter p strong { color: var(--ink); font-weight: 500; }
+
+    .highlight {
+      background: var(--surface); border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: .92rem;
+      line-height: 1.7; color: var(--ink);
+    }
+    .highlight em { font-style: italic; color: var(--accent); }
+
+    /* OBJECTION CARD */
+    .objection-card {
+      border: 1px solid var(--border); margin: 2rem 0;
+      overflow: hidden;
+    }
+    .objection-header {
+      background: var(--ink); color: var(--white);
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .objection-num {
+      font-family: 'Playfair Display', serif; font-size: 1.4rem;
+      font-weight: 600; color: var(--accent-lt); line-height: 1;
+      min-width: 2rem;
+    }
+    .objection-title { font-size: .95rem; font-weight: 500; }
+    .objection-quote { font-size: .82rem; color: rgba(255,255,255,.5); margin-top: .2rem; font-style: italic; }
+    .objection-body { padding: 1.5rem; background: var(--white); }
+    .objection-body p { font-size: .88rem; line-height: 1.7; color: var(--ink-muted); margin-bottom: .8rem; }
+    .objection-body p:last-child { margin-bottom: 0; }
+
+    .translation {
+      background: var(--surface); padding: .8rem 1.2rem; margin: .8rem 0;
+      font-size: .85rem; color: var(--ink-muted);
+    }
+    .translation strong { color: var(--accent); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; display: block; margin-bottom: .3rem; }
+
+    /* DIALOGUE */
+    .dialogue { margin: 1rem 0; }
+    .dialogue-turn {
+      display: flex; gap: .8rem; margin-bottom: .6rem; align-items: flex-start;
+    }
+    .dialogue-label {
+      font-size: .65rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      padding: .25rem .6rem; white-space: nowrap; margin-top: .2rem;
+    }
+    .dialogue-label.prospect { background: var(--surface); color: var(--ink-muted); }
+    .dialogue-label.yo { background: var(--accent); color: var(--white); }
+    .dialogue-text { font-size: .9rem; line-height: 1.6; color: var(--ink); font-style: italic; }
+
+    .good-bad {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border); margin: 1rem 0;
+    }
+    .good { background: var(--white); padding: 1rem 1.2rem; }
+    .bad { background: var(--white); padding: 1rem 1.2rem; }
+    .good-bad-label { font-size: .65rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .5rem; }
+    .good .good-bad-label { color: #2d7a4f; }
+    .bad .good-bad-label { color: #c0392b; }
+    .good-bad p { font-size: .88rem; line-height: 1.5; color: var(--ink); font-style: italic; }
+
+    .rule-box {
+      background: var(--ink); color: var(--white);
+      padding: 1.5rem 2rem; margin: 2rem 0;
+      text-align: center;
+    }
+    .rule-box .rule-num { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-lt); margin-bottom: .5rem; }
+    .rule-box p { font-family: 'Playfair Display', serif; font-size: 1.2rem; line-height: 1.4; font-style: italic; }
+
+    .list { list-style: none; margin: 1rem 0; }
+    .list li {
+      font-size: .92rem; line-height: 1.7; color: var(--ink-muted);
+      padding: .5rem 0 .5rem 1.4rem; position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    .list li:last-child { border-bottom: none; }
+    .list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: .85rem; }
+
+    .stat-inline { display: inline-block; font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--accent); font-weight: 600; }
+
+    .download-cta {
+      background: var(--ink); color: var(--white);
+      padding: 3rem; margin-top: 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 2rem; flex-wrap: wrap;
+    }
+    .download-cta h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; }
+    .download-cta p { font-size: .88rem; color: rgba(255,255,255,.55); margin-top: .4rem; }
+    .btn-download {
+      background: var(--accent); color: var(--white);
+      padding: .9rem 2rem; text-decoration: none;
+      font-size: .82rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      white-space: nowrap; transition: background .2s, transform .15s;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .btn-download:hover { background: #a33e1e; transform: translateY(-1px); }
+
+    .page-footer {
+      padding: 2rem 3rem; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: .9rem; color: var(--ink); }
+    .footer-logo span { color: var(--accent); }
+    .page-footer p { font-size: .75rem; color: var(--ink-muted); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .content { padding: 3rem 1.5rem 4rem; }
+      .good-bad { grid-template-columns: 1fr; }
+      .download-cta { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+      .page-footer { flex-direction: column; gap: 1rem; padding: 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Sales<span>.</span>Playbooks<small>Belén Guarnieri</small></a>
+  <a class="nav-back" href="index.html">← Volver a recursos</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Playbook · Ventas B2B</p>
+    <h1>Manejo de objeciones: la guía de campo para <em>mantener la conversación viva</em></h1>
+    <p class="hero-sub">Las objeciones no son rechazo. Son interés mal encuadrado. Este playbook te enseña a leerlas, responderlas y convertirlas en conversaciones que avanzan.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><strong>7 objeciones</strong>Las más frecuentes en B2B</div>
+      <div class="meta-item"><strong>Casos reales</strong>Diálogos y ejemplos de campo</div>
+      <div class="meta-item"><strong>2026</strong>Adaptado al comprador moderno</div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:760px; margin: 0 auto; padding: 0 3rem;">
+  <div class="intro-quote">
+    "Las objeciones no son rechazo. Son interés mal encuadrado. Si alguien te responde, ya ganaste algo: tiempo mental. La clave no es convencer. Es seguir manejando la conversación."
+    <cite>— Belén Guarnieri</cite>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="chapter">
+    <div class="chapter-num">Contexto · 2026</div>
+    <h2>Por qué las objeciones cambiaron</h2>
+    <p>En 2026, el comprador B2B llegó a cada conversación habiendo investigado antes. <span class="stat-inline">75%</span> de los compradores B2B verifican al proveedor antes de responder un primer mensaje. La desconfianza no es personal — es el nuevo punto de partida.</p>
+    <p>Los ciclos de compra son más largos, hay más decisores involucrados, y nadie quiere parecer el que tomó una mala decisión interna. Eso se traduce en más objeciones, más capas, y más necesidad de <strong>curiosidad inteligente</strong> en lugar de scripts rígidos.</p>
+    <div class="highlight">
+      En 2026 los equipos de ventas que ganan no son los que más responden. Son los que mejor <em>preguntan.</em> Cada objeción es una puerta. La pregunta es si la abrís o la cerrás.
+    </div>
+
+    <div class="rule-box">
+      <div class="rule-num">Regla #1</div>
+      <p>"Nunca pelees con la objeción. Si discutís, perdés. Si validás, ganás."</p>
+    </div>
+
+    <div class="good-bad">
+      <div class="bad">
+        <div class="good-bad-label">❌ Incorrecto</div>
+        <p>"En realidad eso no es así..."</p>
+      </div>
+      <div class="good">
+        <div class="good-bad-label">✅ Correcto</div>
+        <p>"Sí, tiene sentido que lo veas así."</p>
+      </div>
+    </div>
+    <p>La conversación sigue viva. Ese es el único objetivo en ese momento.</p>
+  </div>
+
+  <!-- OBJECION 1 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 1 de 7</div>
+    <h2>"No lo necesitamos"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">01</div>
+        <div>
+          <div class="objection-title">La más frecuente. Casi nunca es verdad.</div>
+          <div class="objection-quote">"No, eso no lo necesitamos."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Traducción real</strong>
+          No es prioridad ahora · No entendí el problema · No tengo tiempo para evaluar esto
+        </div>
+        <p><strong>Estrategia:</strong> No vendas. Explorá. El objetivo no es convencer, es entender si realmente no aplica o si simplemente no apareció como problema todavía.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"No, eso no lo necesitamos."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Puede ser. ¿Porque ya lo resolvieron o porque todavía no apareció como problema?"</div>
+          </div>
+        </div>
+        <p>Silencio. Ahora el cerebro del otro tiene que pensar. Eso es exactamente lo que querés.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECION 2 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 2 de 7</div>
+    <h2>"No tenemos presupuesto"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">02</div>
+        <div>
+          <div class="objection-title">En 2026 nadie dice esto de forma literal.</div>
+          <div class="objection-quote">"Ahora estamos enfocados en otras prioridades."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Versiones modernas</strong>
+          "Ahora no es prioridad" · "Estamos enfocados en otras cosas" · "Quizá más adelante"
+        </div>
+        <div class="translation">
+          <strong>Traducción real</strong>
+          No veo suficiente valor todavía
+        </div>
+        <p><strong>Estrategia:</strong> Nunca discutas el presupuesto. Explorá el contexto. El presupuesto existe — la pregunta es para qué se está usando.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"Ahora estamos enfocados en otras prioridades."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Tiene sentido. De curiosidad: ¿qué problema están tratando de resolver ahora?"</div>
+          </div>
+        </div>
+        <p>Esto abre una conversación estratégica. Ahora entendés el negocio — y podés posicionar tu solución como parte de esa prioridad, no como una nueva.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECION 3 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 3 de 7</div>
+    <h2>"Ya trabajamos con otro proveedor"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">03</div>
+        <div>
+          <div class="objection-title">Buena señal. El problema existe y ya invierten.</div>
+          <div class="objection-quote">"Ya tenemos una solución para eso."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Lo que esto significa en realidad</strong>
+          El problema existe · Ya invierten dinero · Están educados en el tema
+        </div>
+        <p><strong>Estrategia:</strong> No critiques al proveedor actual. Eso te hace ver insegura y predecible. En cambio, preguntá y escuchá — después evolucioná la conversación.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"Ya tenemos una solución para eso."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Buenísimo. ¿Qué están usando hoy?"</div>
+          </div>
+        </div>
+        <p>Escuchás. Después:</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Varias empresas con las que hablamos también arrancaron con eso. Lo que empezaron a buscar después fue ___."</div>
+          </div>
+        </div>
+        <p>No atacás. Evolucionás la conversación hacia el próximo problema que ellos todavía no nombraron.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECION 4 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 4 de 7</div>
+    <h2>"Mandame información"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">04</div>
+        <div>
+          <div class="objection-title">La más peligrosa. Es una forma educada de cerrar.</div>
+          <div class="objection-quote">"Mandame info."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Traducción real</strong>
+          Quiero terminar esta conversación sin quedar mal
+        </div>
+        <p><strong>Estrategia:</strong> Nunca digas solo "sí" y mandés el PDF genérico. Ese PDF nunca se lee. Usá la respuesta para mantener el diálogo vivo.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"Mandame info."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Claro, te mando. Pero para no enviarte algo genérico… ¿qué parte te interesaría entender mejor?"</div>
+          </div>
+        </div>
+        <p>Ahora vuelve a hablar. Y en esa respuesta, te dice exactamente qué le importa.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECION 5 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 5 de 7</div>
+    <h2>"No tengo tiempo"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">05</div>
+        <div>
+          <div class="objection-title">La más común en LinkedIn y email en frío.</div>
+          <div class="objection-quote">"Ahora estoy a mil."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Traducción real</strong>
+          No veo suficiente valor todavía para priorizar esto
+        </div>
+        <p><strong>Estrategia:</strong> No pidas más tiempo. Reducí la fricción al mínimo posible. El objetivo es bajar la barra de entrada.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"Ahora estoy a mil."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Perfecto, entonces lo hago fácil. ¿Te parece si te cuento la idea en 2 líneas y vos me decís si tiene sentido?"</div>
+          </div>
+        </div>
+        <p>Siempre bajar la barrera. Una respuesta de dos líneas es infinitamente mejor que silencio.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECION 6 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 6 de 7</div>
+    <h2>"Eso no aplica a nosotros"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">06</div>
+        <div>
+          <div class="objection-title">Muy común con perfiles técnicos. CTOs especialmente.</div>
+          <div class="objection-quote">"Nosotros no tenemos ese problema."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Traducción real</strong>
+          No entiendo cómo aplica en nuestro contexto específico
+        </div>
+        <p><strong>Estrategia:</strong> Mostrá curiosidad técnica genuina. Los perfiles técnicos responden cuando sienten que la otra persona entiende su mundo.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"Nosotros no tenemos ese problema."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Interesante. ¿Porque lo resolvieron o porque su arquitectura lo evita?"</div>
+          </div>
+        </div>
+        <p>Los ingenieros aman explicar arquitectura. Ahora hablás de su mundo, no del tuyo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECION 7 -->
+  <div class="chapter">
+    <div class="chapter-num">Objeción 7 de 7</div>
+    <h2>"Necesito consultarlo internamente"</h2>
+
+    <div class="objection-card">
+      <div class="objection-header">
+        <div class="objection-num">07</div>
+        <div>
+          <div class="objection-title">La objeción que mata más deals en B2B.</div>
+          <div class="objection-quote">"Tengo que hablarlo con el equipo."</div>
+        </div>
+      </div>
+      <div class="objection-body">
+        <div class="translation">
+          <strong>Traducción real</strong>
+          Hay más decisores · No tengo claridad suficiente para defender esto internamente · El riesgo percibido es alto
+        </div>
+        <p><strong>El contexto 2026:</strong> Las decisiones de compra B2B involucran en promedio 6 a 10 personas. El deal no muere por falta de interés — muere porque nadie tiene suficiente claridad para defenderlo adentro.</p>
+        <p><strong>Estrategia:</strong> Convertite en el aliado interno. Ayudá a que tu contacto pueda vender la idea hacia adentro.</p>
+        <div class="dialogue">
+          <div class="dialogue-turn">
+            <div class="dialogue-label prospect">Prospecto</div>
+            <div class="dialogue-text">"Tengo que hablarlo con el equipo."</div>
+          </div>
+          <div class="dialogue-turn">
+            <div class="dialogue-label yo">Vos</div>
+            <div class="dialogue-text">"Tiene sentido. ¿Qué información necesitarías para presentarlo internamente? Puedo armarte algo específico."</div>
+          </div>
+        </div>
+        <p>No esperés que tu contacto "lo venda" solo. Dales las herramientas para hacerlo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECNICA MODERNA -->
+  <div class="chapter">
+    <div class="chapter-num">Técnica · 2026</div>
+    <h2>La objeción como pregunta</h2>
+    <p>El cambio más importante en el manejo de objeciones moderno no es tener mejor respuesta. Es hacer mejor pregunta.</p>
+
+    <div class="highlight">
+      <em>Cada objeción es una puerta.</em> La mayoría de los vendedores la empujan. Los mejores la abren hacia adentro — con curiosidad, no con argumentos.
+    </div>
+
+    <h3>El framework de 3 movimientos</h3>
+    <ul class="list">
+      <li><strong>Validar:</strong> "Tiene sentido que lo veas así" — la conversación sigue viva</li>
+      <li><strong>Explorar:</strong> Hacer UNA pregunta abierta que obligue a pensar</li>
+      <li><strong>Ampliar:</strong> Conectar lo que dijeron con el problema real sin atacar</li>
+    </ul>
+
+    <h3>Casos reales</h3>
+    <div class="dialogue" style="margin-bottom:1.5rem;">
+      <p style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;font-weight:500;">Caso 1 — Founder fintech</p>
+      <div class="dialogue-turn">
+        <div class="dialogue-label prospect">Prospecto</div>
+        <div class="dialogue-text">"No gestionamos fraude."</div>
+      </div>
+      <div class="dialogue-turn">
+        <div class="dialogue-label yo">Vos</div>
+        <div class="dialogue-text">"Honestidad brutal, me gusta. ¿Porque todavía no apareció o porque la arquitectura lo evita?"</div>
+      </div>
+    </div>
+
+    <div class="dialogue" style="margin-bottom:1.5rem;">
+      <p style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;font-weight:500;">Caso 2 — CTO startup</p>
+      <div class="dialogue-turn">
+        <div class="dialogue-label prospect">Prospecto</div>
+        <div class="dialogue-text">"Ya tenemos compliance."</div>
+      </div>
+      <div class="dialogue-turn">
+        <div class="dialogue-label yo">Vos</div>
+        <div class="dialogue-text">"Buenísimo. ¿Lo manejan interno o con proveedor?"</div>
+      </div>
+    </div>
+
+    <div class="dialogue">
+      <p style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;font-weight:500;">Caso 3 — Head of Product</p>
+      <div class="dialogue-turn">
+        <div class="dialogue-label prospect">Prospecto</div>
+        <div class="dialogue-text">"No es prioridad ahora."</div>
+      </div>
+      <div class="dialogue-turn">
+        <div class="dialogue-label yo">Vos</div>
+        <div class="dialogue-text">"Tiene sentido. ¿Cuál es la prioridad más grande que están atacando hoy?"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENTALIDAD -->
+  <div class="chapter">
+    <div class="chapter-num">Mentalidad</div>
+    <h2>El error que cometen la mayoría</h2>
+    <p>Quieren ganar la discusión. Pero vender no es debatir. Es entender cómo piensa el otro.</p>
+    <div class="rule-box">
+      <div class="rule-num">Regla final</div>
+      <p>"Cada objeción significa que la conversación todavía está viva. Mientras alguien responde... seguís en juego."</p>
+    </div>
+    <p>Las mejores ventas B2B en 2026 no se hacen con pitches. Se hacen con conversaciones inteligentes. Y para eso hay que ser tres cosas:</p>
+    <ul class="list">
+      <li><strong>Curiosa</strong> — preguntás más de lo que afirmás</li>
+      <li><strong>Rápida</strong> — reducís fricción en cada intercambio</li>
+      <li><strong>Humana</strong> — hablás con personas, no con cargos</li>
+    </ul>
+  </div>
+
+  <div class="download-cta">
+    <div>
+      <h3>Descargá el playbook completo</h3>
+      <p>Con más objeciones, frameworks extendidos y plantillas de respuesta — en formato Word editable.</p>
+    </div>
+    <a href="Manejo_Objeciones_B2B_BelenGuarnieri.docx" download class="btn-download">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Descargar .docx
+    </a>
+  </div>
+
+</div>
+
+<footer class="page-footer">
+  <div class="footer-logo">Sales<span>.</span>Playbooks · Belén Guarnieri</div>
+  <p>Libre para compartir con atribución · Buenos Aires, AR</p>
+</footer>
+
+</body>
+</html>
